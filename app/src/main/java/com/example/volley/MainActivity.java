@@ -84,13 +84,21 @@ public class MainActivity extends AppCompatActivity {
                     progressBar.setVisibility(View.GONE);
                 }
             }) {
-                @Nullable @Override protected Map<String,
-                        String> getParams() throws AuthFailureError {
-
-                    Map<String, String> params = new HashMap<>();
-                    params.put("name", "IT wala");
-                    return params;
+                @Override
+                public String getBodyContentType() {
+                    return "application/json; charset=utf-8";
                 }
+
+                @Override
+                public byte[] getBody() throws AuthFailureError {
+                    try {
+                        return requestBody == null ? null : requestBody.getBytes("utf-8");
+                    } catch (UnsupportedEncodingException uee) {
+                        VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", requestBody, "utf-8");
+                        return null;
+                    }
+                }
+
             };
 
             getRequest.setTag("postRequest");
